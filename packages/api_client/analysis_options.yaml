@@ -1,0 +1,9 @@
+include: package:very_good_analysis/analysis_options.5.1.0.yaml
+analyzer:
+  exclude:
+    - build/**
+    - lib/src/data/responses/*.g.dart
+    - lib/src/models/*.g.dart
+linter:
+  rules:
+    file_names: false
