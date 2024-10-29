@@ -2,6 +2,7 @@ import 'package:api_client/api_client.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cities_of_the_world/debug_constants.dart';
 import 'package:cities_of_the_world/features/cities/repository/cities_repository.dart';
+import 'package:easy_debounce/easy_throttle.dart';
 import 'package:equatable/equatable.dart';
 
 part 'cities_state.dart';
@@ -21,8 +22,6 @@ class CitiesCubit extends Cubit<CitiesState> {
   final CitiesRepository _citiesRepository;
 
   Future<void> getCities({
-    int page = 1,
-    bool includeCountry = false,
     String? filter,
   }) async {
     emit(
@@ -32,8 +31,8 @@ class CitiesCubit extends Cubit<CitiesState> {
     );
     try {
       final cities = await _citiesRepository.getCities(
-        page: page,
-        includeCountry: includeCountry,
+        page: state.currentPage,
+        includeCountry: true,
         filter: filter,
       );
       emit(
@@ -49,5 +48,36 @@ class CitiesCubit extends Cubit<CitiesState> {
         ),
       );
     }
+  }
+
+  Future<void> updatePage() async {
+    EasyThrottle.throttle(
+      'my-throttler',
+      const Duration(milliseconds: 2000),
+      () async {
+        emit(
+          state.copyWith(
+            status: CitiesStatus.loading,
+            currentPage: state.currentPage + 1,
+          ),
+        );
+
+        return getCities();
+      },
+    );
+    /* return EasyDebounce.debounce(
+      'onScrollDebounce',
+      const Duration(milliseconds: 750),
+      () async {
+        emit(
+          state.copyWith(
+            status: CitiesStatus.loading,
+            currentPage: state.currentPage + 1,
+          ),
+        );
+
+        return getCities();
+      },
+    );*/
   }
 }

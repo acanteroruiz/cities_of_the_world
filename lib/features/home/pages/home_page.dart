@@ -9,10 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CitiesCubit()
-        ..getCities(
-          includeCountry: true,
-        ),
+      create: (_) => CitiesCubit()..getCities(),
       child: const HomeView(),
     );
   }
