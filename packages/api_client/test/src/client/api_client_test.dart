@@ -38,7 +38,6 @@ void main() {
 
   group('ApiClient', () {
     late http.Client httpClient;
-    late ApiClient apiClient;
 
     setUpAll(() {
       registerFallbackValue(Uri());
@@ -46,10 +45,6 @@ void main() {
 
     setUp(() {
       httpClient = MockHttpClient();
-      apiClient = ApiClient(
-        baseUrl: 'http://example.com',
-        httpClient: httpClient,
-      );
     });
 
     group('localhost constructor', () {
