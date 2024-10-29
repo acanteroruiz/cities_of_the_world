@@ -11,9 +11,7 @@ class HomePage extends StatelessWidget {
     return BlocProvider(
       create: (_) => CitiesCubit()
         ..getCities(
-          page: 2,
           includeCountry: true,
-          filter: 'dal',
         ),
       child: const HomeView(),
     );
