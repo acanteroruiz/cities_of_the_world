@@ -66,8 +66,8 @@ void main() {
         when(() => httpClient.get(any(), headers: any(named: 'headers')))
             .thenAnswer(
           (_) async => http.Response(
-            jsonEncode(
-              const CitiesResponse(
+            jsonEncode({
+              'data': const CitiesResponse(
                 cities: [],
                 pagination: Pagination(
                   currentPage: 1,
@@ -76,7 +76,7 @@ void main() {
                   total: 100,
                 ),
               ),
-            ),
+            }),
             HttpStatus.ok,
           ),
         );
@@ -110,8 +110,8 @@ void main() {
         when(() => httpClient.get(any(), headers: any(named: 'headers')))
             .thenAnswer(
           (_) async => http.Response(
-            jsonEncode(
-              const CitiesResponse(
+            jsonEncode({
+              'data': const CitiesResponse(
                 cities: [],
                 pagination: Pagination(
                   currentPage: 1,
@@ -120,7 +120,7 @@ void main() {
                   total: 100,
                 ),
               ),
-            ),
+            }),
             HttpStatus.ok,
           ),
         );
