@@ -1,5 +1,6 @@
 import 'package:cities_of_the_world/features/cities/bloc/cities_cubit.dart';
 import 'package:cities_of_the_world/features/cities/views/widgets/cities_list.dart';
+import 'package:cities_of_the_world/features/cities/views/widgets/city_search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,25 +22,12 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // title: const Text(
-        //   'Cities of the World',
-        // ),
-        /// add a TextFieldInput to search chities
-        title: TextField(
-          decoration: InputDecoration(
-            hintText: 'Search cities',
-            prefixIcon: const Icon(Icons.search),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
+        title: const CitySearchField(),
       ),
-      body: const Center(
-        child: CitiesList(),
-      ),
+      body: const CitiesList(),
     );
   }
 }

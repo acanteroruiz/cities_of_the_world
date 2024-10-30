@@ -1,4 +1,6 @@
 import 'package:cities_of_the_world/features/cities/bloc/cities_cubit.dart';
+import 'package:cities_of_the_world/features/cities/views/widgets/bottom_loader.dart';
+import 'package:cities_of_the_world/features/cities/views/widgets/city_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,21 +61,9 @@ class _CitiesListViewState extends State<CitiesListView> {
       itemCount: cities.length,
       itemBuilder: (context, index) {
         final city = cities[index];
-        final country = city.country;
         return index >= cities.length
             ? const BottomLoader()
-            : ListTile(
-                dense: true,
-                leading: Text(city.id.toString()),
-                title: Text(city.name),
-                subtitle: country != null ? Text(country.name) : null,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  side: BorderSide(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              );
+            : CityItem(city: city);
       },
     );
   }
@@ -93,20 +83,5 @@ class _CitiesListViewState extends State<CitiesListView> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.offset;
     return currentScroll >= (maxScroll * 0.9);
-  }
-}
-
-class BottomLoader extends StatelessWidget {
-  const BottomLoader({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: SizedBox(
-        height: 24,
-        width: 24,
-        child: CircularProgressIndicator(strokeWidth: 1.5),
-      ),
-    );
   }
 }
