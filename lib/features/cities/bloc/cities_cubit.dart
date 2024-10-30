@@ -15,13 +15,11 @@ class CitiesCubit extends Cubit<CitiesState> {
                 baseUrl: connectEndpoint,
               ),
             ),
-        super(
-          const CitiesState(),
-        );
+        super(const CitiesState());
 
   final CitiesRepository _citiesRepository;
 
-  Future<void> getCities({
+  Future<void> fetchCities({
     String? filter,
   }) async {
     emit(
@@ -31,14 +29,15 @@ class CitiesCubit extends Cubit<CitiesState> {
     );
     try {
       final cities = await _citiesRepository.getCities(
-        page: state.currentPage,
+        page: state.currentPage + 1,
         includeCountry: true,
         filter: filter,
       );
       emit(
         state.copyWith(
           status: CitiesStatus.success,
-          cities: cities,
+          cities: [...state.cities, ...cities],
+          currentPage: state.currentPage + 1,
         ),
       );
     } catch (e) {
@@ -52,32 +51,9 @@ class CitiesCubit extends Cubit<CitiesState> {
 
   Future<void> updatePage() async {
     EasyThrottle.throttle(
-      'my-throttler',
+      'throttle-cities-fetch',
       const Duration(milliseconds: 2000),
-      () async {
-        emit(
-          state.copyWith(
-            status: CitiesStatus.loading,
-            currentPage: state.currentPage + 1,
-          ),
-        );
-
-        return getCities();
-      },
+      () async => fetchCities(),
     );
-    /* return EasyDebounce.debounce(
-      'onScrollDebounce',
-      const Duration(milliseconds: 750),
-      () async {
-        emit(
-          state.copyWith(
-            status: CitiesStatus.loading,
-            currentPage: state.currentPage + 1,
-          ),
-        );
-
-        return getCities();
-      },
-    );*/
   }
 }

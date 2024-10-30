@@ -10,15 +10,19 @@ class CitiesList extends StatelessWidget {
     return BlocBuilder<CitiesCubit, CitiesState>(
       bloc: context.read<CitiesCubit>(),
       builder: (context, state) {
-        return switch (state.status) {
-          (CitiesStatus.loading) => const Center(
+        final stateRecord = (state.status, state.cities.isEmpty);
+        return switch (stateRecord) {
+          (CitiesStatus.initial, _) => const SizedBox(),
+          (CitiesStatus.loading, true) => const Center(
               child: CircularProgressIndicator(),
             ),
-          (CitiesStatus.failure) => const Center(
+          (CitiesStatus.failure, _) => const Center(
               child: Text('Failed to fetch cities'),
             ),
-          (CitiesStatus.initial) => const SizedBox(),
-          (_) => const CitiesListView(
+          (_, true) => const Center(
+              child: Text('No cities'),
+            ),
+          (_, _) => const CitiesListView(
               //cities: state.cities,
               //hasReachedMax: state.hasReachedMax,
               ),
@@ -62,9 +66,6 @@ class _CitiesListViewState extends State<CitiesListView> {
 
     return ListView.builder(
       controller: _scrollController,
-      /*itemCount: widget.hasReachedMax
-          ? widget.cities.length
-          : widget.cities.length + 1,*/
       itemCount: cities.length,
       itemBuilder: (context, index) {
         final city = cities[index];
