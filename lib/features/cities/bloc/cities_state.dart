@@ -10,10 +10,31 @@ class CitiesState extends Equatable {
     this.currentFilter = '',
   });
 
+  factory CitiesState.fromJson(Map<String, dynamic> json) {
+    return CitiesState(
+      cities: (json['cities'] as List)
+          .map(
+            (e) => City.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'cities': cities.map((e) => e.toJson()).toList(),
+      'current_page': currentPage,
+      'current_filter': currentFilter,
+    };
+  }
+
   final CitiesStatus status;
   final List<City> cities;
   final int currentPage;
   final String currentFilter;
+
+  bool get initialDataIsFromCache =>
+      status == CitiesStatus.initial && cities.isNotEmpty;
 
   @override
   List<Object> get props => [

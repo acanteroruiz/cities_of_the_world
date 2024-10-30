@@ -3,16 +3,26 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:cities_of_the_world/features/cities/bloc/cities_cubit.dart';
 import 'package:cities_of_the_world/features/cities/repository/cities_repository_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:time/time.dart';
 
 class MockCitiesRepository extends Mock implements CitiesRepositoryInterface {}
 
+class MockStorage extends Mock implements Storage {}
+
 void main() {
+  late Storage storage;
+  setUp(() {
+    storage = MockStorage();
+    when(
+      () => storage.write(any(), any<dynamic>()),
+    ).thenAnswer((_) async {});
+    HydratedBloc.storage = storage;
+  });
   group('CitiesCubit', () {
     late CitiesRepositoryInterface citiesRepository;
     late CitiesCubit citiesCubit;
-
     setUp(() {
       citiesRepository = MockCitiesRepository();
       citiesCubit = CitiesCubit(citiesRepository: citiesRepository);
@@ -23,7 +33,8 @@ void main() {
     });
 
     blocTest<CitiesCubit, CitiesState>(
-      'emits [loading, success] when fetchCities succeeds',
+      'emits [success] when fetchCities succeeds '
+      'and initial data is from cache',
       build: () {
         when(
           () => citiesRepository.getCities(
@@ -45,6 +56,46 @@ void main() {
       },
       act: (cubit) => cubit.fetchCities(),
       expect: () => [
+        // const CitiesState(status: CitiesStatus.loading),
+        const CitiesState(
+          status: CitiesStatus.success,
+          cities: [
+            City(
+              id: 1,
+              name: 'Test City',
+              localName: 'Local Test City',
+              countryId: 1,
+            ),
+          ],
+          currentPage: 1,
+        ),
+      ],
+    );
+
+    blocTest<CitiesCubit, CitiesState>(
+      'emits [loading, success] when fetchCities succeeds '
+      'and initial data is not from cache',
+      build: () {
+        when(
+          () => citiesRepository.getCities(
+            page: any(named: 'page'),
+            includeCountry: any(named: 'includeCountry'),
+            filter: any(named: 'filter'),
+          ),
+        ).thenAnswer(
+          (_) async => [
+            const City(
+              id: 1,
+              name: 'Test City',
+              localName: 'Local Test City',
+              countryId: 1,
+            ),
+          ],
+        );
+        return citiesCubit;
+      },
+      act: (cubit) => cubit.fetchCities(refresh: true),
+      expect: () => [
         const CitiesState(status: CitiesStatus.loading),
         const CitiesState(
           status: CitiesStatus.success,
@@ -62,7 +113,28 @@ void main() {
     );
 
     blocTest<CitiesCubit, CitiesState>(
-      'emits [loading, failure] when fetchCities fails',
+      'emits [loading, failure] when fetchCities fails '
+      'and initial data is not from cache',
+      build: () {
+        when(
+          () => citiesRepository.getCities(
+            page: any(named: 'page'),
+            includeCountry: any(named: 'includeCountry'),
+            filter: any(named: 'filter'),
+          ),
+        ).thenThrow(Exception('error'));
+        return citiesCubit;
+      },
+      act: (cubit) => cubit.fetchCities(refresh: true),
+      expect: () => [
+        const CitiesState(status: CitiesStatus.loading),
+        const CitiesState(status: CitiesStatus.failure),
+      ],
+    );
+
+    blocTest<CitiesCubit, CitiesState>(
+      'emits [failure] when fetchCities fails '
+      'and initial data is from cache',
       build: () {
         when(
           () => citiesRepository.getCities(
@@ -75,7 +147,6 @@ void main() {
       },
       act: (cubit) => cubit.fetchCities(),
       expect: () => [
-        const CitiesState(status: CitiesStatus.loading),
         const CitiesState(status: CitiesStatus.failure),
       ],
     );
@@ -107,7 +178,6 @@ void main() {
         await cubit.updatePage();
       },
       expect: () => [
-        const CitiesState(status: CitiesStatus.loading),
         const CitiesState(
           status: CitiesStatus.success,
           cities: [

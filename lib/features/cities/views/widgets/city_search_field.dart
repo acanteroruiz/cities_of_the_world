@@ -8,6 +8,8 @@ class CitySearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final initialDataIsFromCache =
+        context.watch<CitiesCubit>().state.initialDataIsFromCache;
     final currentFilter = context.watch<CitiesCubit>().state.currentFilter;
     return TextField(
       controller: TextEditingController.fromValue(
@@ -28,13 +30,15 @@ class CitySearchField extends StatelessWidget {
         );
       },
       decoration: InputDecoration(
-        hintText: 'Search cities',
+        hintText: initialDataIsFromCache
+            ? 'Last search, tap to refresh'
+            : 'Search cities',
         prefixIcon: const Icon(Icons.search),
-        suffixIcon: currentFilter.isNotEmpty
+        suffixIcon: initialDataIsFromCache || currentFilter.isNotEmpty
             ? IconButton(
                 icon: const Icon(Icons.clear),
                 onPressed: () async =>
-                    context.read<CitiesCubit>().fetchCities(),
+                    context.read<CitiesCubit>().fetchCities(refresh: true),
               )
             : null,
         border: OutlineInputBorder(

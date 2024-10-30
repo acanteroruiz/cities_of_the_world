@@ -1,14 +1,14 @@
 import 'package:api_client/api_client.dart';
-import 'package:bloc/bloc.dart';
 import 'package:cities_of_the_world/debug_constants.dart';
 import 'package:cities_of_the_world/features/cities/repository/cities_repository.dart';
 import 'package:cities_of_the_world/features/cities/repository/cities_repository_interface.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 part 'cities_state.dart';
 
-class CitiesCubit extends Cubit<CitiesState> {
+class CitiesCubit extends HydratedCubit<CitiesState> {
   CitiesCubit({CitiesRepositoryInterface? citiesRepository})
       : _citiesRepository = citiesRepository ??
             ConnectCitiesRepository(
@@ -22,15 +22,19 @@ class CitiesCubit extends Cubit<CitiesState> {
 
   Future<void> fetchCities({
     String filter = '',
+    bool refresh = false,
   }) async {
-    emit(
-      state.copyWith(
-        status: CitiesStatus.loading,
-      ),
-    );
+    if (!state.initialDataIsFromCache && refresh) {
+      emit(
+        state.copyWith(
+          status: CitiesStatus.loading,
+        ),
+      );
+    }
+
     try {
       final newSearch = state.currentFilter != filter;
-      final newPage = newSearch ? 1 : state.currentPage + 1;
+      final newPage = newSearch || refresh ? 1 : state.currentPage + 1;
 
       final cities = await _citiesRepository.getCities(
         page: newPage,
@@ -38,16 +42,18 @@ class CitiesCubit extends Cubit<CitiesState> {
         filter: filter,
       );
 
-      final updatedCities = state.currentFilter == filter
-          ? [
+      final updatedCities = newSearch || refresh
+          ? cities
+          : [
               ...state.cities,
               ...cities,
-            ]
-          : cities;
+            ];
 
       emit(
         state.copyWith(
-          status: CitiesStatus.success,
+          status: state.initialDataIsFromCache && !refresh
+              ? CitiesStatus.initial
+              : CitiesStatus.success,
           cities: updatedCities,
           currentPage: newPage,
           currentFilter: filter,
@@ -70,5 +76,15 @@ class CitiesCubit extends Cubit<CitiesState> {
         filter: state.currentFilter,
       ),
     );
+  }
+
+  @override
+  CitiesState? fromJson(Map<String, dynamic> json) {
+    return CitiesState.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic>? toJson(CitiesState state) {
+    return state.toJson();
   }
 }

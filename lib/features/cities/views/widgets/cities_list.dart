@@ -14,7 +14,7 @@ class CitiesList extends StatelessWidget {
       builder: (context, state) {
         final stateRecord = (state.status, state.cities.isEmpty);
         return switch (stateRecord) {
-          (CitiesStatus.initial, _) => const SizedBox(),
+          (CitiesStatus.initial, true) => const SizedBox(),
           (CitiesStatus.loading, true) => const Center(
               child: CircularProgressIndicator(),
             ),
@@ -50,11 +50,6 @@ class _CitiesListViewState extends State<CitiesListView> {
   @override
   Widget build(BuildContext context) {
     final cities = context.watch<CitiesCubit>().state.cities;
-    if (cities.isEmpty) {
-      return const Center(
-        child: Text('No cities'),
-      );
-    }
 
     return ListView.builder(
       controller: _scrollController,

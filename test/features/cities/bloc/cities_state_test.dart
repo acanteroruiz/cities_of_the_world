@@ -56,5 +56,66 @@ void main() {
         ),
       );
     });
+
+    test('toJson returns correct map', () {
+      final cities = [
+        const City(
+          id: 1,
+          name: 'name',
+          localName: 'local_name',
+          countryId: 1,
+        ),
+      ];
+      final state = CitiesState(
+        status: CitiesStatus.success,
+        cities: cities,
+        currentPage: 1,
+        currentFilter: 'filter',
+      );
+      expect(
+        state.toJson(),
+        {
+          'cities': [
+            {
+              'id': 1,
+              'name': 'name',
+              'local_name': 'local_name',
+              'country_id': 1,
+              'country': null,
+              'lat': null,
+              'lng': null,
+            },
+          ],
+          'current_page': 1,
+          'current_filter': 'filter',
+        },
+      );
+    });
+
+    test('fromJson returns correct state', () {
+      final json = {
+        'cities': [
+          {
+            'id': 1,
+            'name': 'name',
+            'local_name': 'local_name',
+            'country_id': 1,
+          },
+        ],
+      };
+      expect(
+        CitiesState.fromJson(json),
+        const CitiesState(
+          cities: [
+            City(
+              id: 1,
+              name: 'name',
+              localName: 'local_name',
+              countryId: 1,
+            ),
+          ],
+        ),
+      );
+    });
   });
 }
