@@ -8,7 +8,16 @@ class CitySearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentFilter = context.watch<CitiesCubit>().state.currentFilter;
     return TextField(
+      controller: TextEditingController.fromValue(
+        TextEditingValue(
+          text: currentFilter,
+          selection: TextSelection.collapsed(
+            offset: currentFilter.length,
+          ),
+        ),
+      ),
       onChanged: (value) async {
         return EasyDebounce.debounce(
           'search-cities-debounce',
@@ -21,6 +30,13 @@ class CitySearchField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: 'Search cities',
         prefixIcon: const Icon(Icons.search),
+        suffixIcon: currentFilter.isNotEmpty
+            ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () async =>
+                    context.read<CitiesCubit>().fetchCities(),
+              )
+            : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
         ),
