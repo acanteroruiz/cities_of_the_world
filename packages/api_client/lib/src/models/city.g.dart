@@ -23,7 +23,7 @@ Map<String, dynamic> _$CityToJson(City instance) => <String, dynamic>{
       'name': instance.name,
       'local_name': instance.localName,
       'country_id': instance.countryId,
-      'country': instance.country,
+      'country': instance.country?.toJson(),
       'lat': instance.latitude,
       'lng': instance.longitude,
     };

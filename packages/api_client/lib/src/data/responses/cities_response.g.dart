@@ -17,6 +17,6 @@ CitiesResponse _$CitiesResponseFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$CitiesResponseToJson(CitiesResponse instance) =>
     <String, dynamic>{
-      'items': instance.cities,
-      'pagination': instance.pagination,
+      'items': instance.cities.map((city) => city.toJson()).toList(),
+      'pagination': instance.pagination.toJson(),
     };
