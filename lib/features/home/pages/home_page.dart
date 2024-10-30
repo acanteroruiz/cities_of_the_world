@@ -23,8 +23,18 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(
-          'Cities of the World',
+        // title: const Text(
+        //   'Cities of the World',
+        // ),
+        /// add a TextFieldInput to search chities
+        title: TextField(
+          decoration: InputDecoration(
+            hintText: 'Search cities',
+            prefixIcon: const Icon(Icons.search),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
         ),
       ),
       body: const Center(

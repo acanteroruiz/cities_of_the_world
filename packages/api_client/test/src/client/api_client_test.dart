@@ -148,7 +148,7 @@ void main() {
               'id': 2,
               'name': 'City2',
               'local_name': 'LocalCity2',
-              'country_id': 2
+              'country_id': 2,
             },
           ],
           'pagination': {
@@ -162,7 +162,8 @@ void main() {
 
       when(() => httpClient.get(any(), headers: any(named: 'headers')))
           .thenAnswer(
-              (_) async => http.Response(jsonEncode(responseJson), 200));
+        (_) async => http.Response(jsonEncode(responseJson), 200),
+      );
 
       final citiesResponse = await ApiClient(
         baseUrl: 'http://example.com',
@@ -198,9 +199,10 @@ void main() {
           .thenAnswer((_) async => http.Response('Invalid JSON', 200));
 
       expect(
-        () async => await ApiClient(
-                baseUrl: 'http://example.com', httpClient: httpClient)
-            .getCities(),
+        () async => ApiClient(
+          baseUrl: 'http://example.com',
+          httpClient: httpClient,
+        ).getCities(),
         throwsA(isA<ApiMalformedResponse>()),
       );
     });
