@@ -1,6 +1,6 @@
 # Main script
 echo "Running tests...."
-fvm flutter test --coverage --test-randomize-ordering-seed random
+flutter test --coverage --test-randomize-ordering-seed random
 echo "Tests completed...."
 echo "Filtering coverage report...."
 lcov --remove coverage/lcov.info \
