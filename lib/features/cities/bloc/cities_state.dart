@@ -36,6 +36,15 @@ class CitiesState extends Equatable {
   bool get initialDataIsFromCache =>
       status == CitiesStatus.initial && cities.isNotEmpty;
 
+  String get hintLabel {
+    final hintLabelRecord = (status, cities.isEmpty);
+    return switch (hintLabelRecord) {
+      (CitiesStatus.initial, false) => 'Last search, tap to refresh',
+      (CitiesStatus.failure, false) => 'No connection, last search',
+      (_, _) => 'Search cities',
+    };
+  }
+
   @override
   List<Object> get props => [
         status,

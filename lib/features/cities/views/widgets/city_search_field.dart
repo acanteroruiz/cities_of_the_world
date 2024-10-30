@@ -10,7 +10,9 @@ class CitySearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     final initialDataIsFromCache =
         context.watch<CitiesCubit>().state.initialDataIsFromCache;
+    final hintLabel = context.watch<CitiesCubit>().state.hintLabel;
     final currentFilter = context.watch<CitiesCubit>().state.currentFilter;
+
     return TextField(
       controller: TextEditingController.fromValue(
         TextEditingValue(
@@ -30,9 +32,7 @@ class CitySearchField extends StatelessWidget {
         );
       },
       decoration: InputDecoration(
-        hintText: initialDataIsFromCache
-            ? 'Last search, tap to refresh'
-            : 'Search cities',
+        hintText: hintLabel,
         prefixIcon: const Icon(Icons.search),
         suffixIcon: initialDataIsFromCache || currentFilter.isNotEmpty
             ? IconButton(

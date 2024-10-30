@@ -117,5 +117,70 @@ void main() {
         ),
       );
     });
+
+    test(
+        'initialDataIsFromCache returns true when status is initial '
+        'and cities is not empty', () {
+      final cities = [
+        const City(
+          id: 1,
+          name: 'name',
+          localName: 'local_name',
+          countryId: 1,
+        ),
+      ];
+      final state = CitiesState(
+        cities: cities,
+      );
+      expect(state.initialDataIsFromCache, isTrue);
+    });
+
+    test(
+        'initialDataIsFromCache returns false when status is not initial '
+        'or cities is empty', () {
+      const stateWithEmptyCities = CitiesState();
+      const stateWithNonInitialStatus = CitiesState(
+        status: CitiesStatus.success,
+        cities: [
+          City(
+            id: 1,
+            name: 'name',
+            localName: 'local_name',
+            countryId: 1,
+          ),
+        ],
+      );
+      expect(stateWithEmptyCities.initialDataIsFromCache, isFalse);
+      expect(stateWithNonInitialStatus.initialDataIsFromCache, isFalse);
+    });
+
+    test('hintLabel returns correct label based on status and cities', () {
+      const stateInitialWithCities = CitiesState(
+        cities: [
+          City(
+            id: 1,
+            name: 'name',
+            localName: 'local_name',
+            countryId: 1,
+          ),
+        ],
+      );
+      const stateFailureWithCities = CitiesState(
+        status: CitiesStatus.failure,
+        cities: [
+          City(
+            id: 1,
+            name: 'name',
+            localName: 'local_name',
+            countryId: 1,
+          ),
+        ],
+      );
+      const stateWithNoCities = CitiesState();
+
+      expect(stateInitialWithCities.hintLabel, 'Last search, tap to refresh');
+      expect(stateFailureWithCities.hintLabel, 'No connection, last search');
+      expect(stateWithNoCities.hintLabel, 'Search cities');
+    });
   });
 }

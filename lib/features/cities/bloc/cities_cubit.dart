@@ -60,11 +60,16 @@ class CitiesCubit extends HydratedCubit<CitiesState> {
         ),
       );
     } catch (e) {
-      emit(
-        state.copyWith(
-          status: CitiesStatus.failure,
-        ),
-      );
+      if (state.cities.isNotEmpty) {
+        emit(
+          state.copyWith(
+            status: CitiesStatus.failure,
+            cities: state.cities,
+            currentPage: state.currentPage,
+            currentFilter: state.currentFilter,
+          ),
+        );
+      }
     }
   }
 

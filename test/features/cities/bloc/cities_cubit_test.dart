@@ -11,6 +11,13 @@ class MockCitiesRepository extends Mock implements CitiesRepositoryInterface {}
 
 class MockStorage extends Mock implements Storage {}
 
+const fakeCity = City(
+  id: 1,
+  name: 'Test City',
+  localName: 'Local Test City',
+  countryId: 1,
+);
+
 void main() {
   late Storage storage;
   setUp(() {
@@ -44,12 +51,7 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => [
-            const City(
-              id: 1,
-              name: 'Test City',
-              localName: 'Local Test City',
-              countryId: 1,
-            ),
+            fakeCity,
           ],
         );
         return citiesCubit;
@@ -60,12 +62,7 @@ void main() {
         const CitiesState(
           status: CitiesStatus.success,
           cities: [
-            City(
-              id: 1,
-              name: 'Test City',
-              localName: 'Local Test City',
-              countryId: 1,
-            ),
+            fakeCity,
           ],
           currentPage: 1,
         ),
@@ -84,12 +81,7 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => [
-            const City(
-              id: 1,
-              name: 'Test City',
-              localName: 'Local Test City',
-              countryId: 1,
-            ),
+            fakeCity,
           ],
         );
         return citiesCubit;
@@ -100,12 +92,7 @@ void main() {
         const CitiesState(
           status: CitiesStatus.success,
           cities: [
-            City(
-              id: 1,
-              name: 'Test City',
-              localName: 'Local Test City',
-              countryId: 1,
-            ),
+            fakeCity,
           ],
           currentPage: 1,
         ),
@@ -125,10 +112,29 @@ void main() {
         ).thenThrow(Exception('error'));
         return citiesCubit;
       },
+      seed: () => const CitiesState(
+        status: CitiesStatus.success,
+        cities: [
+          fakeCity,
+        ],
+        currentPage: 1,
+      ),
       act: (cubit) => cubit.fetchCities(refresh: true),
       expect: () => [
-        const CitiesState(status: CitiesStatus.loading),
-        const CitiesState(status: CitiesStatus.failure),
+        const CitiesState(
+          status: CitiesStatus.loading,
+          currentPage: 1,
+          cities: [
+            fakeCity,
+          ],
+        ),
+        const CitiesState(
+          status: CitiesStatus.failure,
+          currentPage: 1,
+          cities: [
+            fakeCity,
+          ],
+        ),
       ],
     );
 
@@ -145,9 +151,22 @@ void main() {
         ).thenThrow(Exception('error'));
         return citiesCubit;
       },
+      seed: () => const CitiesState(
+        status: CitiesStatus.success,
+        cities: [
+          fakeCity,
+        ],
+        currentPage: 1,
+      ),
       act: (cubit) => cubit.fetchCities(),
       expect: () => [
-        const CitiesState(status: CitiesStatus.failure),
+        const CitiesState(
+          status: CitiesStatus.failure,
+          currentPage: 1,
+          cities: [
+            fakeCity,
+          ],
+        ),
       ],
     );
 
@@ -162,12 +181,7 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => [
-            const City(
-              id: 1,
-              name: 'Test City',
-              localName: 'Local Test City',
-              countryId: 1,
-            ),
+            fakeCity,
           ],
         );
         return citiesCubit;
@@ -181,12 +195,7 @@ void main() {
         const CitiesState(
           status: CitiesStatus.success,
           cities: [
-            City(
-              id: 1,
-              name: 'Test City',
-              localName: 'Local Test City',
-              countryId: 1,
-            ),
+            fakeCity,
           ],
           currentPage: 1,
         ),

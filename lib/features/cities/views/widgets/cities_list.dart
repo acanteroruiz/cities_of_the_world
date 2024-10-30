@@ -18,7 +18,7 @@ class CitiesList extends StatelessWidget {
           (CitiesStatus.loading, true) => const Center(
               child: CircularProgressIndicator(),
             ),
-          (CitiesStatus.failure, _) => const Center(
+          (CitiesStatus.failure, true) => const Center(
               child: Text('Failed to fetch cities'),
             ),
           (_, true) => const Center(
