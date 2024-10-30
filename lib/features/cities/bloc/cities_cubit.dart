@@ -21,7 +21,7 @@ class CitiesCubit extends Cubit<CitiesState> {
   final CitiesRepositoryInterface _citiesRepository;
 
   Future<void> fetchCities({
-    String? filter,
+    String filter = '',
   }) async {
     emit(
       state.copyWith(
