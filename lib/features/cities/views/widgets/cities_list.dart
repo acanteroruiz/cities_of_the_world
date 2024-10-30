@@ -22,10 +22,7 @@ class CitiesList extends StatelessWidget {
           (_, true) => const Center(
               child: Text('No cities'),
             ),
-          (_, _) => const CitiesListView(
-              //cities: state.cities,
-              //hasReachedMax: state.hasReachedMax,
-              ),
+          (_, _) => const CitiesListView(),
         };
       },
     );
@@ -33,14 +30,7 @@ class CitiesList extends StatelessWidget {
 }
 
 class CitiesListView extends StatefulWidget {
-  const CitiesListView({
-    //required this.cities,
-    //required this.hasReachedMax,
-    super.key,
-  });
-
-  //final List<City> cities;
-  //final bool hasReachedMax;
+  const CitiesListView({super.key});
 
   @override
   State<CitiesListView> createState() => _CitiesListViewState();
