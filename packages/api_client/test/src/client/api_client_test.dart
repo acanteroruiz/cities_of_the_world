@@ -133,5 +133,76 @@ void main() {
         ).called(1);
       });
     });
+
+    test('getCities returns CitiesResponse on success', () async {
+      final responseJson = {
+        'data': {
+          'items': [
+            {
+              'id': 1,
+              'name': 'City1',
+              'local_name': 'LocalCity1',
+              'country_id': 1,
+            },
+            {
+              'id': 2,
+              'name': 'City2',
+              'local_name': 'LocalCity2',
+              'country_id': 2
+            },
+          ],
+          'pagination': {
+            'current_page': 1,
+            'last_page': 1,
+            'per_page': 10,
+            'total': 2,
+          },
+        },
+      };
+
+      when(() => httpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer(
+              (_) async => http.Response(jsonEncode(responseJson), 200));
+
+      final citiesResponse = await ApiClient(
+        baseUrl: 'http://example.com',
+        httpClient: httpClient,
+      ).getCities();
+
+      expect(citiesResponse.cities.length, 2);
+      expect(citiesResponse.cities[0].name, 'City1');
+    });
+
+    test('getCities throws ApiRequestFailure on non-200 response', () async {
+      when(
+        () => httpClient.get(
+          any(),
+          headers: any(named: 'headers'),
+        ),
+      ).thenAnswer(
+        (_) async => http.Response(jsonEncode({'error': 'Not Found'}), 404),
+      );
+
+      expect(
+        () async =>
+            ApiClient(baseUrl: 'http://example.com', httpClient: httpClient)
+                .getCities(),
+        throwsA(
+          isA<ApiRequestFailure>(),
+        ),
+      );
+    });
+
+    test('getCities throws ApiMalformedResponse on invalid JSON', () async {
+      when(() => httpClient.get(any(), headers: any(named: 'headers')))
+          .thenAnswer((_) async => http.Response('Invalid JSON', 200));
+
+      expect(
+        () async => await ApiClient(
+                baseUrl: 'http://example.com', httpClient: httpClient)
+            .getCities(),
+        throwsA(isA<ApiMalformedResponse>()),
+      );
+    });
   });
 }
