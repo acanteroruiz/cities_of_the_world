@@ -7,6 +7,7 @@ lcov --remove coverage/lcov.info \
 '*/view/*' \
 '*/pages/*' \
 '*/widgets/*' \
+'*_interface.dart' \
 '*.g.dart' \
 -o coverage/lcov_filtered.info
 echo "Generating coverage report...."

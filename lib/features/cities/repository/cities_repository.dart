@@ -1,16 +1,7 @@
 import 'package:api_client/api_client.dart';
+import 'package:cities_of_the_world/features/cities/repository/cities_repository_interface.dart';
 
-interface class CitiesRepository {
-  Future<List<City>> getCities({
-    required int page,
-    required bool includeCountry,
-    String? filter,
-  }) {
-    throw UnimplementedError();
-  }
-}
-
-class ConnectCitiesRepository implements CitiesRepository {
+class ConnectCitiesRepository implements CitiesRepositoryInterface {
   ConnectCitiesRepository({
     required this.apiClient,
   });

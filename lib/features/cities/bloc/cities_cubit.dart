@@ -2,13 +2,14 @@ import 'package:api_client/api_client.dart';
 import 'package:bloc/bloc.dart';
 import 'package:cities_of_the_world/debug_constants.dart';
 import 'package:cities_of_the_world/features/cities/repository/cities_repository.dart';
+import 'package:cities_of_the_world/features/cities/repository/cities_repository_interface.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:equatable/equatable.dart';
 
 part 'cities_state.dart';
 
 class CitiesCubit extends Cubit<CitiesState> {
-  CitiesCubit({CitiesRepository? citiesRepository})
+  CitiesCubit({CitiesRepositoryInterface? citiesRepository})
       : _citiesRepository = citiesRepository ??
             ConnectCitiesRepository(
               apiClient: ApiClient.demo(
@@ -17,7 +18,7 @@ class CitiesCubit extends Cubit<CitiesState> {
             ),
         super(const CitiesState());
 
-  final CitiesRepository _citiesRepository;
+  final CitiesRepositoryInterface _citiesRepository;
 
   Future<void> fetchCities({
     String? filter,

@@ -1,16 +1,16 @@
 import 'package:api_client/api_client.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cities_of_the_world/features/cities/bloc/cities_cubit.dart';
-import 'package:cities_of_the_world/features/cities/repository/cities_repository.dart';
+import 'package:cities_of_the_world/features/cities/repository/cities_repository_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:time/time.dart';
 
-class MockCitiesRepository extends Mock implements CitiesRepository {}
+class MockCitiesRepository extends Mock implements CitiesRepositoryInterface {}
 
 void main() {
   group('CitiesCubit', () {
-    late CitiesRepository citiesRepository;
+    late CitiesRepositoryInterface citiesRepository;
     late CitiesCubit citiesCubit;
 
     setUp(() {
