@@ -91,13 +91,12 @@ class ApiClient {
   /// * [includeCountry] - Whether to include the country information.
   Future<CitiesResponse> getCities({
     int page = 1,
-    String? filter,
+    String filter = '',
     bool includeCountry = false,
   }) async {
     final pageParameter = 'page=$page';
     final includeParameter = includeCountry ? '&include=country' : '';
-    final filterParameter =
-        filter != null ? 'filter[0][name][contains]=$filter&' : '';
+    final filterParameter = 'filter[0][name][contains]=$filter&';
 
     final uri = Uri.parse(
       '$_baseUrl/city?$filterParameter$pageParameter$includeParameter',

@@ -49,7 +49,7 @@ class _CitiesListViewState extends State<CitiesListView> {
 
   @override
   Widget build(BuildContext context) {
-    final cities = context.select((CitiesCubit cubit) => cubit.state.cities);
+    final cities = context.watch<CitiesCubit>().state.cities;
     if (cities.isEmpty) {
       return const Center(
         child: Text('No cities'),

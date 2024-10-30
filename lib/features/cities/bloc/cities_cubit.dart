@@ -29,16 +29,28 @@ class CitiesCubit extends Cubit<CitiesState> {
       ),
     );
     try {
+      final newSearch = state.currentFilter != filter;
+      final newPage = newSearch ? 1 : state.currentPage + 1;
+
       final cities = await _citiesRepository.getCities(
-        page: state.currentPage + 1,
+        page: newPage,
         includeCountry: true,
         filter: filter,
       );
+
+      final updatedCities = state.currentFilter == filter
+          ? [
+              ...state.cities,
+              ...cities,
+            ]
+          : cities;
+
       emit(
         state.copyWith(
           status: CitiesStatus.success,
-          cities: [...state.cities, ...cities],
-          currentPage: state.currentPage + 1,
+          cities: updatedCities,
+          currentPage: newPage,
+          currentFilter: filter,
         ),
       );
     } catch (e) {
@@ -54,7 +66,9 @@ class CitiesCubit extends Cubit<CitiesState> {
     EasyThrottle.throttle(
       'throttle-cities-fetch',
       const Duration(milliseconds: 2000),
-      () async => fetchCities(),
+      () async => fetchCities(
+        filter: state.currentFilter,
+      ),
     );
   }
 }

@@ -4,7 +4,7 @@ interface class CitiesRepositoryInterface {
   Future<List<City>> getCities({
     required int page,
     required bool includeCountry,
-    String? filter,
+    String filter = '',
   }) {
     throw UnimplementedError();
   }

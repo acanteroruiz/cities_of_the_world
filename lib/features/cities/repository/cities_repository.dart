@@ -12,7 +12,7 @@ class ConnectCitiesRepository implements CitiesRepositoryInterface {
   Future<List<City>> getCities({
     int page = 1,
     bool includeCountry = false,
-    String? filter,
+    String filter = '',
   }) async {
     try {
       final response = await apiClient.getCities(

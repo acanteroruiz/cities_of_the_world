@@ -14,7 +14,7 @@ void main() {
     test('initial props are correct', () {
       expect(
         const CitiesState().props,
-        [CitiesStatus.initial, const <City>[], 0],
+        [CitiesStatus.initial, const <City>[], 0, ''],
       );
     });
 
