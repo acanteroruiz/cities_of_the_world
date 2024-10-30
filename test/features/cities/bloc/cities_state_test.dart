@@ -26,8 +26,8 @@ void main() {
     });
 
     test(
-        'copyWith retains the old value for every parameter if null is provided',
-        () {
+        'copyWith retains the old value for every parameter '
+        'if null is provided', () {
       expect(
         const CitiesState().copyWith(),
         const CitiesState(),
@@ -41,7 +41,7 @@ void main() {
           name: 'name',
           localName: 'local_name',
           countryId: 1,
-        )
+        ),
       ];
       expect(
         const CitiesState().copyWith(
