@@ -87,6 +87,10 @@ class CitiesCubit extends HydratedCubit<CitiesState> {
     );
   }
 
+  void reset() {
+    emit(const CitiesState());
+  }
+
   @override
   CitiesState? fromJson(Map<String, dynamic> json) {
     return CitiesState.fromJson(json);

@@ -38,8 +38,7 @@ class CitySearchField extends StatelessWidget {
         suffixIcon: initialDataIsFromCache || currentFilter.isNotEmpty
             ? IconButton(
                 icon: const Icon(Icons.clear),
-                onPressed: () async =>
-                    context.read<CitiesCubit>().fetchCities(refresh: true),
+                onPressed: () async => context.read<CitiesCubit>().reset(),
               )
             : null,
         border: OutlineInputBorder(
