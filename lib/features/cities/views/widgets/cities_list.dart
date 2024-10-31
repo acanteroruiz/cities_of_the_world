@@ -1,6 +1,7 @@
 import 'package:cities_of_the_world/features/cities/bloc/cities_cubit.dart';
 import 'package:cities_of_the_world/features/cities/views/widgets/bottom_loader.dart';
 import 'package:cities_of_the_world/features/cities/views/widgets/city_list_item.dart';
+import 'package:cities_of_the_world/features/cities/views/widgets/no_cities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,15 +15,20 @@ class CitiesList extends StatelessWidget {
       builder: (context, state) {
         final stateRecord = (state.status, state.cities.isEmpty);
         return switch (stateRecord) {
-          (CitiesStatus.initial, true) => const SizedBox(),
+          (CitiesStatus.initial, true) => const NoCities(
+              label: 'No cities yet. Use the search field to find cities.',
+              iconData: Icons.search,
+            ),
           (CitiesStatus.loading, true) => const Center(
               child: CircularProgressIndicator(),
             ),
-          (CitiesStatus.failure, true) => const Center(
-              child: Text('Failed to fetch cities'),
+          (CitiesStatus.failure, true) => const NoCities(
+              label: 'Failed to fetch cities.',
+              iconData: Icons.error,
             ),
-          (_, true) => const Center(
-              child: Text('No cities'),
+          (_, true) => const NoCities(
+              label: 'No cities found.',
+              iconData: Icons.remove_red_eye,
             ),
           (_, _) => const CitiesListView(),
         };
