@@ -157,6 +157,24 @@ void main() {
     );
 
     blocTest<CitiesCubit, CitiesState>(
+      'emits [initial] when reset',
+      build: () {
+        return citiesCubit;
+      },
+      seed: () => const CitiesState(
+        status: CitiesStatus.success,
+        cities: [
+          fakeCity,
+        ],
+        currentPage: 1,
+      ),
+      act: (cubit) => cubit.reset(),
+      expect: () => [
+        const CitiesState(),
+      ],
+    );
+
+    blocTest<CitiesCubit, CitiesState>(
       'throttles updatePage calls',
       build: () {
         when(
