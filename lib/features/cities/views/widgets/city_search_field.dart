@@ -28,6 +28,7 @@ class CitySearchField extends StatelessWidget {
           const Duration(milliseconds: 500),
           () => context.read<CitiesCubit>().fetchCities(
                 filter: value,
+                refresh: true,
               ),
         );
       },

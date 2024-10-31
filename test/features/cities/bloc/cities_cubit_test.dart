@@ -40,33 +40,19 @@ void main() {
     });
 
     blocTest<CitiesCubit, CitiesState>(
-      'emits [success] when fetchCities succeeds '
-      'and initial data is from cache',
+      'emits nothing when initial data is from cache '
+      'and not refreshing',
       build: () {
-        when(
-          () => citiesRepository.getCities(
-            page: any(named: 'page'),
-            includeCountry: any(named: 'includeCountry'),
-            filter: any(named: 'filter'),
-          ),
-        ).thenAnswer(
-          (_) async => [
-            fakeCity,
-          ],
-        );
         return citiesCubit;
       },
+      seed: () => const CitiesState(
+        cities: [
+          fakeCity,
+        ],
+        currentPage: 1,
+      ),
       act: (cubit) => cubit.fetchCities(),
-      expect: () => [
-        // const CitiesState(status: CitiesStatus.loading),
-        const CitiesState(
-          status: CitiesStatus.success,
-          cities: [
-            fakeCity,
-          ],
-          currentPage: 1,
-        ),
-      ],
+      expect: () => <CitiesState>[],
     );
 
     blocTest<CitiesCubit, CitiesState>(

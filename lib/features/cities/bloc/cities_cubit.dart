@@ -24,6 +24,10 @@ class CitiesCubit extends HydratedCubit<CitiesState> {
     String filter = '',
     bool refresh = false,
   }) async {
+    if (state.initialDataIsFromCache && !refresh) {
+      return;
+    }
+
     if (!state.initialDataIsFromCache && refresh) {
       emit(
         state.copyWith(
